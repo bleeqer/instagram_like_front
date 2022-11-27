@@ -3,6 +3,7 @@ import React from "react";
 import * as Yup from "yup";
 import { Formik } from "formik";
 import { Button, Divider } from "react-native-elements";
+import validUrl from "valid-url";
 
 // const uploadPostSchema = Yup.object().shape({
 // 	imageUrl: Yup.string().url().required("Image URL is required"),
@@ -16,12 +17,16 @@ const uploadPostSchema = Yup.object({
 	caption: Yup.string().max(2200, "Caption must be less than 2200 characters"),
 });
 
-const FormikPostUploader = () => {
+const FormikPostUploader = ({ navigation }) => {
 	const [thumbnail, setThumbnail] = React.useState("");
 	return (
 		<Formik
 			initialValues={{ imageUrl: "", caption: "" }}
-			onSubmit={(values) => console.log(values)}
+			onSubmit={(values) => {
+				console.log(values);
+				console.log("You have successfully uploaded a post!");
+				navigation.goBack();
+			}}
 			validationSchema={uploadPostSchema}
 			validateOnMount={true}>
 			{({
@@ -40,7 +45,9 @@ const FormikPostUploader = () => {
 							marginBottom: 10,
 						}}>
 						<Image
-							source={{ uri: PLACEHOLDER_IMG }}
+							source={{
+								uri: validUrl.isUri(thumbnail) ? thumbnail : PLACEHOLDER_IMG,
+							}}
 							style={{ width: 100, height: 100 }}
 						/>
 						<TextInput
@@ -58,6 +65,9 @@ const FormikPostUploader = () => {
 						style={{ marginBottom: 5 }}
 					/>
 					<TextInput
+						onChange={(e) => {
+							setThumbnail(e.nativeEvent.text);
+						}}
 						placeholder="Enter image URL..."
 						placeholderTextColor={"gray"}
 						style={{ fontSize: 18, marginBottom: 5 }}

@@ -2,16 +2,16 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import FormikPostUploader from "./FormikPostUploader";
 
-const addNewPost = () => (
+const addNewPost = ({ navigation }) => (
 	<View>
-		<Header />
+		<Header navigation={navigation} />
 		<FormikPostUploader />
 	</View>
 );
 
-const Header = () => (
+const Header = ({ navigation }) => (
 	<View style={styles.headerContainer}>
-		<TouchableOpacity>
+		<TouchableOpacity onPress={() => navigation.goBack()}>
 			<Image
 				source={require("../../assets/go_back_icon.png")}
 				style={{ height: 35, width: 35 }}
